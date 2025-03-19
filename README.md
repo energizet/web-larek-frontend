@@ -1,5 +1,7 @@
 # Проектная работа "Веб-ларек"
 
+https://energizet.github.io/web-larek-frontend/
+
 Стек: HTML, SCSS, TS, Webpack
 
 Структура проекта:
