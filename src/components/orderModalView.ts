@@ -16,7 +16,7 @@ export class OrderModalView {
 	constructor(
 		private readonly emitter: EventEmitter,
 		private readonly modal: ModalView,
-		private readonly order: OrderModel,
+		private readonly order: OrderModel
 	) {
 		this.form = OrderModalView.clone() as HTMLFormElement;
 
@@ -36,31 +36,40 @@ export class OrderModalView {
 		}
 		this.updateButtonStatus();
 
-		this.address.addEventListener('input', () => {
-			this.order.address = this.address.value;
-			this.updateButtonStatus();
-		});
-		this.buttonCard.addEventListener('click', () => {
-			this.order.payType = PayType.Online;
-			this.buttonCard.classList.add('button_alt-active');
-			this.buttonCash.classList.remove('button_alt-active');
-			this.updateButtonStatus();
-		});
-		this.buttonCash.addEventListener('click', () => {
-			this.order.payType = PayType.Offline;
-			this.buttonCard.classList.remove('button_alt-active');
-			this.buttonCash.classList.add('button_alt-active');
-			this.updateButtonStatus();
-		});
-		this.form.addEventListener('submit', (e) => {
-			e.preventDefault();
-			this.emitter.emit(settings.openContacts);
-		});
+		this.address.addEventListener('input', () => this.onInputAddress());
+		this.buttonCard.addEventListener('click', () => this.onClickCard());
+		this.buttonCash.addEventListener('click', () => this.onClickCash());
+		this.form.addEventListener('submit', (e) => this.onSubmit(e));
 
 		this.modal.render(this.form);
 	}
 
-	updateButtonStatus() {
-		this.button.disabled = this.order.payType == null || this.order.address == '';
+	private updateButtonStatus() {
+		this.button.disabled =
+			this.order.payType == null || this.order.address == '';
+	}
+
+	private onInputAddress() {
+		this.order.address = this.address.value;
+		this.updateButtonStatus();
+	}
+
+	private onClickCard() {
+		this.order.payType = PayType.Online;
+		this.buttonCard.classList.add('button_alt-active');
+		this.buttonCash.classList.remove('button_alt-active');
+		this.updateButtonStatus();
+	}
+
+	private onClickCash() {
+		this.order.payType = PayType.Offline;
+		this.buttonCard.classList.remove('button_alt-active');
+		this.buttonCash.classList.add('button_alt-active');
+		this.updateButtonStatus();
+	}
+
+	private onSubmit(e: SubmitEvent) {
+		e.preventDefault();
+		this.emitter.emit(settings.openContacts);
 	}
 }

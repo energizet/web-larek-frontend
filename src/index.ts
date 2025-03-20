@@ -13,14 +13,14 @@ import { ContactsModalView } from './components/contactsModalView';
 import { SuccessModalView } from './components/successModalView';
 
 const emitter = new EventEmitter();
-const api = new Api(new ApiUtil(API_URL), emitter);
+const api = new Api(new ApiUtil(API_URL));
 const cart = new CartModel();
 const order = new OrderModel();
 
 const cartButton = document.querySelector('.header__basket');
 cartButton.addEventListener('click', () => emitter.emit(settings.openCart));
 const galleryView = new GalleryView(emitter);
-const modalView = new ModalView(emitter);
+const modalView = new ModalView();
 
 emitter.on<Product[]>(settings.onLoadedProducts, (p) => galleryView.render(p));
 emitter.on<Product>(settings.openCard, (p) => {

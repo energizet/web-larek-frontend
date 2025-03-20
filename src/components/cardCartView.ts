@@ -32,9 +32,11 @@ export class CardCartView {
 		this.title.textContent = product.title;
 		this.price.textContent = ProductMapper.getPrice(product);
 
-		this.button.addEventListener('click', () => {
-			this.emitter.emit<Product>(settings.deleteProduct, product);
-			this.cartModal.render();
-		});
+		this.button.addEventListener('click', () => this.onDelete(product));
+	}
+
+	private onDelete(product: Product) {
+		this.emitter.emit<Product>(settings.deleteProduct, product);
+		this.cartModal.render();
 	}
 }

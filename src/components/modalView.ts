@@ -1,12 +1,10 @@
-import { EventEmitter } from './base/events';
-
 export class ModalView {
 	private readonly modal: Element;
 	private readonly container: Element;
 	private readonly close: Element;
 	private readonly content: Element;
 
-	constructor(private readonly emitter: EventEmitter) {
+	constructor() {
 		this.modal = document.querySelector('#modal-container');
 		this.container = this.modal.querySelector('.modal__container');
 		this.close = this.modal.querySelector('.modal__close');

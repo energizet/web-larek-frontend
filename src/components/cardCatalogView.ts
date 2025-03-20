@@ -31,8 +31,10 @@ export class CardCatalogView {
 		this.image.alt = product.title;
 		this.price.textContent = ProductMapper.getPrice(product);
 
-		this.card.addEventListener('click', () =>
-			this.emitter.emit<Product>(settings.openCard, product)
-		);
+		this.card.addEventListener('click', () => this.onOpenCard(product));
+	}
+
+	private onOpenCard(product: Product) {
+		this.emitter.emit<Product>(settings.openCard, product);
 	}
 }

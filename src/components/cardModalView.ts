@@ -24,8 +24,6 @@ export class CardModalView {
 
 	private static clone = cloneTemplate('#card-preview');
 
-	private click: () => void;
-
 	constructor(
 		private readonly emitter: EventEmitter,
 		private readonly modal: ModalView,

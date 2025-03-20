@@ -10,9 +10,7 @@ export class SuccessModalView {
 
 	private static clone = cloneTemplate('#success');
 
-	constructor(
-		private readonly modal: ModalView
-	) {
+	constructor(private readonly modal: ModalView) {
 		this.element = SuccessModalView.clone();
 
 		this.description = this.element.querySelector(
@@ -24,10 +22,12 @@ export class SuccessModalView {
 	render(response: OrderResponse) {
 		this.description.textContent = `Списано ${response.total} синапсов`;
 
-		this.button.addEventListener('click', () => {
-			this.modal.hide();
-		});
+		this.button.addEventListener('click', () => this.onClick());
 
 		this.modal.render(this.element);
+	}
+
+	private onClick() {
+		this.modal.hide();
 	}
 }

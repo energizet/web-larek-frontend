@@ -39,8 +39,12 @@ export class CartModalView {
 
 		this.price.textContent = ProductMapper.getPrice(this.cart.getPrice());
 
-		this.button.addEventListener('click', () => this.emitter.emit(settings.openOrder));
+		this.button.addEventListener('click', () => this.onOpenOrder());
 
 		this.modal.render(this.element);
+	}
+
+	onOpenOrder() {
+		this.emitter.emit(settings.openOrder);
 	}
 }

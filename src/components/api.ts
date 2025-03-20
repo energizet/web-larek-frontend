@@ -1,11 +1,9 @@
-import { EventEmitter } from './base/events';
 import { Order, OrderResponse, ProductResponse } from '../types';
 import { ApiUtil } from './base/apiUtil';
 
 export class Api {
 	constructor(
-		private readonly api: ApiUtil,
-		private readonly emitter: EventEmitter
+		private readonly api: ApiUtil
 	) {}
 
 	loadProducts() {

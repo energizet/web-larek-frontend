@@ -29,23 +29,29 @@ export class ContactsModalView {
 		this.phone.value = this.order.phone;
 		this.updateButtonStatus();
 
-		this.email.addEventListener('input', () => {
-			this.order.email = this.email.value;
-			this.updateButtonStatus();
-		});
-		this.phone.addEventListener('input', () => {
-			this.order.phone = this.phone.value;
-			this.updateButtonStatus();
-		});
-		this.form.addEventListener('submit', (e) => {
-			e.preventDefault();
-			this.emitter.emit(settings.order);
-		});
+		this.email.addEventListener('input', () => this.onInputEmail());
+		this.phone.addEventListener('input', () => this.onInputPhone());
+		this.form.addEventListener('submit', (e) => this.onSubmit(e));
 
 		this.modal.render(this.form);
 	}
 
-	updateButtonStatus() {
+	private updateButtonStatus() {
 		this.button.disabled = this.order.email == '' || this.order.phone == '';
+	}
+
+	private onInputEmail() {
+		this.order.email = this.email.value;
+		this.updateButtonStatus();
+	}
+
+	private onInputPhone() {
+		this.order.phone = this.phone.value;
+		this.updateButtonStatus();
+	}
+
+	private onSubmit(e: SubmitEvent) {
+		e.preventDefault();
+		this.emitter.emit(settings.order);
 	}
 }
