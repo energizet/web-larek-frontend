@@ -3,7 +3,6 @@ import { cloneTemplate } from '../utils/utils';
 import { settings } from '../utils/constants';
 import { EventEmitter } from './base/events';
 import { ProductMapper } from '../utils/ProductMapper';
-import { CartModalView } from './cartModalView';
 
 export class CardCartView {
 	public readonly card: Element;
@@ -15,10 +14,7 @@ export class CardCartView {
 
 	private static clone = cloneTemplate('#card-basket');
 
-	constructor(
-		private readonly emitter: EventEmitter,
-		private readonly cartModal: CartModalView
-	) {
+	constructor(private readonly emitter: EventEmitter) {
 		this.card = CardCartView.clone();
 
 		this.index = this.card.querySelector('.basket__item-index');
@@ -37,6 +33,6 @@ export class CardCartView {
 
 	private onDelete(product: Product) {
 		this.emitter.emit<Product>(settings.deleteProduct, product);
-		this.cartModal.render();
+		this.emitter.emit(settings.openCart);
 	}
 }

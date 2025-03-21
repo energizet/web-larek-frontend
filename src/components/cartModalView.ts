@@ -31,7 +31,7 @@ export class CartModalView {
 		const emitter = this.emitter;
 		const products = this.cart.getProducts();
 		const cards = products.map((p, index) => {
-			const view = new CardCartView(emitter, this);
+			const view = new CardCartView(emitter);
 			view.render(p, index + 1);
 			return view.card;
 		});
