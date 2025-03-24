@@ -14,7 +14,10 @@ export class CardCartView {
 
 	private static clone = cloneTemplate('#card-basket');
 
-	constructor(private readonly emitter: EventEmitter) {
+	constructor(
+		private readonly emitter: EventEmitter,
+		private readonly mapper: ProductMapper
+	) {
 		this.card = CardCartView.clone();
 
 		this.index = this.card.querySelector('.basket__item-index');
@@ -26,7 +29,7 @@ export class CardCartView {
 	render(product: Product, index: number) {
 		this.index.textContent = index.toString();
 		this.title.textContent = product.title;
-		this.price.textContent = ProductMapper.getPrice(product);
+		this.price.textContent = this.mapper.getPrice(product);
 
 		this.button.addEventListener('click', () => this.onDelete(product));
 	}

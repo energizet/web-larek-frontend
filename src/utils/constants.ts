@@ -11,4 +11,5 @@ export const settings = {
 	openContacts: 'openContacts',
 	order: 'order',
 	onOrdered: 'onOrdered',
+	updateCart: 'updateCart',
 };

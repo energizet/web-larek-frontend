@@ -14,7 +14,10 @@ export class CardCatalogView {
 
 	private static clone = cloneTemplate('#card-catalog');
 
-	constructor(private readonly emitter: EventEmitter) {
+	constructor(
+		private readonly emitter: EventEmitter,
+		private readonly mapper: ProductMapper
+	) {
 		this.card = CardCatalogView.clone();
 
 		this.category = this.card.querySelector('.card__category');
@@ -25,11 +28,11 @@ export class CardCatalogView {
 
 	render(product: Product) {
 		this.category.textContent = product.category;
-		this.category.classList.add(ProductMapper.getCategory(product));
+		this.category.classList.add(this.mapper.getCategory(product));
 		this.title.textContent = product.title;
-		this.image.src = ProductMapper.getUrl(product);
+		this.image.src = this.mapper.getUrl(product);
 		this.image.alt = product.title;
-		this.price.textContent = ProductMapper.getPrice(product);
+		this.price.textContent = this.mapper.getPrice(product);
 
 		this.card.addEventListener('click', () => this.onOpenCard(product));
 	}

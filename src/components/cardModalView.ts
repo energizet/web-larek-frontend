@@ -18,7 +18,7 @@ export class CardModalView {
 	private readonly title: Element;
 	private readonly description: Element;
 	private readonly price: Element;
-	private readonly button: Element;
+	private readonly button: HTMLButtonElement;
 
 	private buttonStatus: ButtonStatus;
 
@@ -27,7 +27,8 @@ export class CardModalView {
 	constructor(
 		private readonly emitter: EventEmitter,
 		private readonly modal: ModalView,
-		private readonly cart: CartModel
+		private readonly cart: CartModel,
+		private readonly mapper: ProductMapper
 	) {
 		this.card = CardModalView.clone();
 
@@ -41,26 +42,23 @@ export class CardModalView {
 
 	render(product: Product) {
 		this.category.textContent = product.category;
-		this.category.classList.add(ProductMapper.getCategory(product));
+		this.category.classList.add(this.mapper.getCategory(product));
 		this.title.textContent = product.title;
 		this.description.textContent = product.description;
-		this.image.src = ProductMapper.getUrl(product);
+		this.image.src = this.mapper.getUrl(product);
 		this.image.alt = product.title;
-		this.price.textContent = ProductMapper.getPrice(product);
+		this.price.textContent = this.mapper.getPrice(product);
 		this.button.textContent = this.buttonStatus = this.cart.contains(product)
 			? ButtonStatus.Cart
 			: ButtonStatus.Buy;
 
+		this.button.disabled = product.price == null;
 		this.button.addEventListener('click', () => this.onClick(product));
 
 		this.modal.render(this.card);
 	}
 
 	onClick(product: Product) {
-		if (product.price == null) {
-			return;
-		}
-
 		if (this.buttonStatus === ButtonStatus.Buy) {
 			this.emitter.emit<Product>(settings.addProduct, product);
 			this.button.textContent = this.buttonStatus = ButtonStatus.Cart;
