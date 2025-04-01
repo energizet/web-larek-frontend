@@ -12,6 +12,7 @@ import { OrderModalView } from './components/orderModalView';
 import { ContactsModalView } from './components/contactsModalView';
 import { SuccessModalView } from './components/successModalView';
 import { ProductMapper } from './utils/ProductMapper';
+import { CardCartViewBuilder } from './components/cardCartView';
 
 const emitter = new EventEmitter();
 const api = new Api(new ApiUtil(API_URL));
@@ -24,6 +25,7 @@ const cartCounter = document.querySelector('.header__basket-counter');
 cartButton.addEventListener('click', () => emitter.emit(settings.openCart));
 const galleryView = new GalleryView(emitter, mapper);
 const modalView = new ModalView();
+const builder = new CardCartViewBuilder(emitter, mapper);
 
 emitter.on(
 	settings.updateCart,
@@ -36,7 +38,13 @@ emitter.on<Product>(settings.openCard, (p) => {
 	modalView.show();
 });
 emitter.on(settings.openCart, () => {
-	const cartModalView = new CartModalView(emitter, modalView, cart, mapper);
+	const cartModalView = new CartModalView(
+		emitter,
+		modalView,
+		cart,
+		mapper,
+		builder
+	);
 	cartModalView.render();
 	modalView.show();
 });
@@ -76,14 +84,15 @@ emitter.on(settings.order, () =>
 		})
 		.then((response) => {
 			cart.clear();
+			emitter.emit(settings.updateCart);
 			emitter.emit(settings.onOrdered, response);
 		})
+		.catch((e) => console.log(e))
 );
 
 (() => {
 	api
 		.loadProducts()
-		.then((response) =>
-			emitter.emit(settings.onLoadedProducts, response.items)
-		);
+		.then((response) => emitter.emit(settings.onLoadedProducts, response.items))
+		.catch((e) => console.log(e));
 })();

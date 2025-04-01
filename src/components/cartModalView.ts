@@ -4,7 +4,7 @@ import { CartModel } from '../types';
 import { ProductMapper } from '../utils/ProductMapper';
 import { ModalView } from './modalView';
 import { settings } from '../utils/constants';
-import { CardCartView } from './cardCartView';
+import { CardCartView, CardCartViewBuilder } from './cardCartView';
 
 export class CartModalView {
 	public readonly element: Element;
@@ -19,7 +19,8 @@ export class CartModalView {
 		private readonly emitter: EventEmitter,
 		private readonly modal: ModalView,
 		private readonly cart: CartModel,
-		private readonly mapper: ProductMapper
+		private readonly mapper: ProductMapper,
+		private readonly builder: CardCartViewBuilder
 	) {
 		this.element = CartModalView.clone();
 
@@ -29,13 +30,10 @@ export class CartModalView {
 	}
 
 	render() {
-		const emitter = this.emitter;
 		const products = this.cart.getProducts();
-		const cards = products.map((p, index) => {
-			const view = new CardCartView(emitter, this.mapper);
-			view.render(p, index + 1);
-			return view.card;
-		});
+		const cards = products.map(
+			(p, index) => this.builder.render(p, index + 1).card
+		);
 		this.list.replaceChildren(...cards);
 
 		this.price.textContent = this.mapper.getPrice(this.cart.getPrice());

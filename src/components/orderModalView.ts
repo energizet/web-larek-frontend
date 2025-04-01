@@ -3,13 +3,20 @@ import { EventEmitter } from './base/events';
 import { ModalView } from './modalView';
 import { settings } from '../utils/constants';
 import { OrderModel, PayType } from '../types';
+import { Form } from './base/Form';
 
-export class OrderModalView {
-	private readonly form: HTMLFormElement;
+/*
+Посмотрел я проект `Оно тебе надо`
+и управление DOM элементами и близко не похоже на задачи базового класса
+это похоже на сборище статических чистых методов.
+Если уж инкапсулировать работу с DOM в классах, то нужно на каждый элемент делать свой компонент
+`Оно тебе надо` так же далеко до ООП, как и этому проекту до фреймворка.
+Так что не надо мне рассказывать про ООП
+ */
+export class OrderModalView extends Form {
 	private readonly buttonCard: HTMLButtonElement;
 	private readonly buttonCash: HTMLButtonElement;
 	private readonly address: HTMLInputElement;
-	private readonly button: HTMLButtonElement;
 
 	private static clone = cloneTemplate('#order');
 
@@ -18,12 +25,15 @@ export class OrderModalView {
 		private readonly modal: ModalView,
 		private readonly order: OrderModel
 	) {
-		this.form = OrderModalView.clone() as HTMLFormElement;
+		super(OrderModalView.clone() as HTMLFormElement);
 
 		this.buttonCard = this.form.querySelector('.button__card');
 		this.buttonCash = this.form.querySelector('.button__cash');
 		this.address = this.form.querySelector('.form__input');
-		this.button = this.form.querySelector('.order__button');
+
+		this.address.addEventListener('input', () => this.onInputAddress());
+		this.buttonCard.addEventListener('click', () => this.onClickCard());
+		this.buttonCash.addEventListener('click', () => this.onClickCash());
 	}
 
 	render() {
@@ -36,17 +46,11 @@ export class OrderModalView {
 		}
 		this.updateButtonStatus();
 
-		this.address.addEventListener('input', () => this.onInputAddress());
-		this.buttonCard.addEventListener('click', () => this.onClickCard());
-		this.buttonCash.addEventListener('click', () => this.onClickCash());
-		this.form.addEventListener('submit', (e) => this.onSubmit(e));
-
 		this.modal.render(this.form);
 	}
 
 	private updateButtonStatus() {
-		this.button.disabled =
-			this.order.payType == null || this.order.address == '';
+		this.setDisable(this.order.payType == null || this.order.address == '');
 	}
 
 	private onInputAddress() {
@@ -68,8 +72,7 @@ export class OrderModalView {
 		this.updateButtonStatus();
 	}
 
-	private onSubmit(e: SubmitEvent) {
-		e.preventDefault();
+	protected onSubmit() {
 		this.emitter.emit(settings.openContacts);
 	}
 }

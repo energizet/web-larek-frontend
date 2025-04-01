@@ -3,12 +3,11 @@ import { EventEmitter } from './base/events';
 import { ModalView } from './modalView';
 import { settings } from '../utils/constants';
 import { OrderModel } from '../types';
+import { Form } from './base/Form';
 
-export class ContactsModalView {
-	private readonly form: HTMLFormElement;
+export class ContactsModalView extends Form {
 	private readonly email: HTMLInputElement;
 	private readonly phone: HTMLInputElement;
-	private readonly button: HTMLButtonElement;
 
 	private static clone = cloneTemplate('#contacts');
 
@@ -17,11 +16,13 @@ export class ContactsModalView {
 		private readonly modal: ModalView,
 		private readonly order: OrderModel
 	) {
-		this.form = ContactsModalView.clone() as HTMLFormElement;
+		super(ContactsModalView.clone() as HTMLFormElement);
 
 		this.email = this.form.querySelector('.input__email');
 		this.phone = this.form.querySelector('.input__phone');
-		this.button = this.form.querySelector('.button');
+
+		this.email.addEventListener('input', () => this.onInputEmail());
+		this.phone.addEventListener('input', () => this.onInputPhone());
 	}
 
 	render() {
@@ -29,15 +30,11 @@ export class ContactsModalView {
 		this.phone.value = this.order.phone;
 		this.updateButtonStatus();
 
-		this.email.addEventListener('input', () => this.onInputEmail());
-		this.phone.addEventListener('input', () => this.onInputPhone());
-		this.form.addEventListener('submit', (e) => this.onSubmit(e));
-
 		this.modal.render(this.form);
 	}
 
 	private updateButtonStatus() {
-		this.button.disabled = this.order.email == '' || this.order.phone == '';
+		this.setDisable(this.order.email == '' || this.order.phone == '');
 	}
 
 	private onInputEmail() {
@@ -50,8 +47,7 @@ export class ContactsModalView {
 		this.updateButtonStatus();
 	}
 
-	private onSubmit(e: SubmitEvent) {
-		e.preventDefault();
+	protected onSubmit() {
 		this.emitter.emit(settings.order);
 	}
 }
