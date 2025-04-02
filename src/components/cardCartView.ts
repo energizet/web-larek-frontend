@@ -46,6 +46,10 @@ export class CardCartViewBuilder {
 		private readonly mapper: ProductMapper
 	) {}
 
+	/*
+	Можно, если это единственная задача класса
+	Это называется - паттерн Фабричный метод. Подробнее про него тут https://refactoring.guru/ru/design-patterns/factory-method
+	 */
 	render(product: Product, index: number): CardCartView {
 		const view = new CardCartView(this.emitter, this.mapper);
 		view.render(product, index);

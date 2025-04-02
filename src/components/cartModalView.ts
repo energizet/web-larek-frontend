@@ -27,6 +27,8 @@ export class CartModalView {
 		this.list = this.element.querySelector('.basket__list');
 		this.price = this.element.querySelector('.basket__price');
 		this.button = this.element.querySelector('.basket__button');
+
+		this.button.addEventListener('click', () => this.onOpenOrder());
 	}
 
 	render() {
@@ -39,7 +41,6 @@ export class CartModalView {
 		this.price.textContent = this.mapper.getPrice(this.cart.getPrice());
 
 		this.button.disabled = products.length == 0;
-		this.button.addEventListener('click', () => this.onOpenOrder());
 
 		this.modal.render(this.element);
 	}

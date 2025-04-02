@@ -40,6 +40,8 @@ export class CardModalView {
 		this.button = this.card.querySelector('.card__row>.button');
 	}
 
+	private onClickFunction: () => void;
+
 	render(product: Product) {
 		this.category.textContent = product.category;
 		this.category.classList.add(this.mapper.getCategory(product));
@@ -53,7 +55,9 @@ export class CardModalView {
 			: ButtonStatus.Buy;
 
 		this.button.disabled = product.price == null;
-		this.button.addEventListener('click', () => this.onClick(product));
+		this.button.removeEventListener('click', this.onClickFunction);
+		this.onClickFunction = () => this.onClick(product);
+		this.button.addEventListener('click', this.onClickFunction);
 
 		this.modal.render(this.card);
 	}

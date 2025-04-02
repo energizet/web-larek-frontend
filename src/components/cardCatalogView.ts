@@ -41,3 +41,16 @@ export class CardCatalogView {
 		this.emitter.emit<Product>(settings.openCard, product);
 	}
 }
+
+export class CardCatalogViewBuilder {
+	constructor(
+		private readonly emitter: EventEmitter,
+		private readonly mapper: ProductMapper
+	) {}
+
+	render(product: Product): CardCatalogView {
+		const view = new CardCatalogView(this.emitter, this.mapper);
+		view.render(product);
+		return view;
+	}
+}

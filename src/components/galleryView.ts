@@ -1,25 +1,15 @@
 import { Product } from '../types';
-import { CardCatalogView } from './cardCatalogView';
-import { EventEmitter } from './base/events';
-import { ProductMapper } from '../utils/ProductMapper';
+import { CardCatalogViewBuilder } from './cardCatalogView';
 
 export class GalleryView {
 	private readonly gallery: Element;
 
-	constructor(
-		private readonly emitter: EventEmitter,
-		private readonly mapper: ProductMapper
-	) {
+	constructor(private readonly builder: CardCatalogViewBuilder) {
 		this.gallery = document.querySelector('.gallery');
 	}
 
 	render(products: Product[]) {
-		const emitter = this.emitter;
-		const cards = products.map((p) => {
-			const view = new CardCatalogView(emitter, this.mapper);
-			view.render(p);
-			return view.card;
-		});
+		const cards = products.map((p) => this.builder.render(p).card);
 		this.gallery.replaceChildren(...cards);
 	}
 }

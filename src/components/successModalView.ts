@@ -17,12 +17,12 @@ export class SuccessModalView {
 			'.order-success__description'
 		);
 		this.button = this.element.querySelector('.order-success__close');
+
+		this.button.addEventListener('click', () => this.onClick());
 	}
 
 	render(response: OrderResponse) {
 		this.description.textContent = `Списано ${response.total} синапсов`;
-
-		this.button.addEventListener('click', () => this.onClick());
 
 		this.modal.render(this.element);
 	}
